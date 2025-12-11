@@ -1,0 +1,177 @@
+<template>
+    <div class="container py-4">
+        <h2 class="mb-3">Wellness Sessions</h2>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div v-for="session in combinedSessions" :key="session.id" class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ session.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ session.presenter }}</h6>
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-0 card-text">📅 {{ formatDate(session.start_date) }}</p>
+                            <p class="mb-0 card-text">🕒 {{ formatTime(session.start_time) }}</p>
+                        </div>
+                        <p class="card-text mb-0">
+                            📍 {{ session.venue }}
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a :href="session.youtubeUrl" class="btn btn-outline-accent text-dark mt-2" target="_blank">
+                                ▶ Watch Live
+                            </a>
+                            <button class="btn btn-sm text-dark">{{ session.status }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+
+// --- Dummy Data: Merged Events & Workshops with Sample YouTube URLs
+const events = [
+    {
+        id: 1,
+        title: 'Stress Management Seminar',
+        start_date: '2025-07-24',
+        start_time: '10:00:00',
+        presenter: 'Dr. Smith',
+        venue: 'City Wellness Center, Hall A',
+        youtubeUrl: 'https://www.youtube.com/watch?v=ZToicYcHIOU',
+        status: 'Completed'
+    },
+    {
+        id: 2,
+        title: 'Morning Yoga for Wellness',
+        start_date: '2025-07-25',
+        start_time: '07:30:00',
+        presenter: 'Yoga Studio',
+        venue: 'Riverside Yoga Park',
+        youtubeUrl: 'https://www.youtube.com/watch?v=v7AYKMP6rOE',
+        status: 'Live'
+    },
+    {
+        id: 3,
+        title: 'Sleep & Mental Health Talk',
+        start_date: '2025-08-03',
+        start_time: '16:00:00',
+        presenter: 'Dr. Alka Sharma',
+        venue: 'Community Health Auditorium',
+        youtubeUrl: 'https://www.youtube.com/watch?v=8RsbvZz3SvQ',
+        status: 'Yet to stream'
+    },
+    {
+        id: 4,
+        title: 'Walking Meditation Session',
+        start_date: '2025-08-10',
+        start_time: '06:30:00',
+        presenter: 'MindfulSteps Org',
+        venue: 'Botanical Garden Trail',
+        youtubeUrl: 'https://www.youtube.com/watch?v=1vx8iUvfyCY',
+        status: 'Yet to stream'
+    },
+    {
+        id: 5,
+        title: 'Healthy Habits for Office Workers',
+        start_date: '2025-09-14',
+        start_time: '11:00:00',
+        presenter: 'Dr. Ramesh Patel',
+        venue: 'Tech Park Conference Hall 2',
+        youtubeUrl: 'https://www.youtube.com/watch?v=uzI9tZ7rTUM',
+        status: 'Yet to stream'
+    },
+    {
+        id: 6,
+        title: 'Outdoor Tai Chi Experience',
+        start_date: '2025-09-21',
+        start_time: '07:00:00',
+        presenter: 'TaiChi Club',
+        venue: 'Lakeside Ground, Sector 5',
+        youtubeUrl: 'https://www.youtube.com/watch?v=cEOS2zoyQw4',
+        status: 'Yet to stream'
+    }
+]
+
+const workshops = [
+    {
+        id: 101,
+        title: 'Anger Management Techniques',
+        start_date: '2025-07-25',
+        start_time: '14:00:00',
+        presenter: 'Dr. Ramchandra Prasad',
+        venue: 'Wellness Hall, Block B',
+        youtubeUrl: 'https://www.youtube.com/watch?v=gmwiJ6ghLIM',
+        status: 'Completed'
+    },
+    {
+        id: 102,
+        title: 'Nutrition for Energy',
+        start_date: '2025-07-30',
+        start_time: '11:00:00',
+        presenter: 'Dr. Gopi',
+        venue: 'Diet & Nutrition Lab, Health Tower',
+        youtubeUrl: 'https://www.youtube.com/watch?v=RkH_1R-SQ3c',
+        status: 'Yet to stream'
+    },
+    {
+        id: 103,
+        title: 'Work-Life Balance for Professionals',
+        start_date: '2025-08-06',
+        start_time: '10:30:00',
+        presenter: 'Dr. Aisha Khan',
+        venue: 'Hotel GreenView, Banquet Room 1',
+        youtubeUrl: 'https://www.youtube.com/watch?v=Tc9n_1Sow5s',
+        status: 'Yet to stream'
+    },
+    {
+        id: 104,
+        title: 'Overcoming Burnout',
+        start_date: '2025-08-23',
+        start_time: '15:00:00',
+        presenter: 'Prof. Sunil Desai',
+        venue: 'Metro Wellness Centre',
+        youtubeUrl: 'https://www.youtube.com/watch?v=iZIjDtVvTH8',
+        status: 'Yet to stream'
+    },
+    {
+        id: 105,
+        title: 'Posture & Ergonomics for Desk Jobs',
+        start_date: '2025-09-05',
+        start_time: '09:00:00',
+        presenter: 'Physio Expert Team',
+        venue: 'Urban Health Club, Workshop Zone',
+        youtubeUrl: 'https://www.youtube.com/watch?v=_gBJxUeJrH0',
+        status: 'Yet to stream'
+    },
+    {
+        id: 106,
+        title: 'Healing Through Breathwork',
+        start_date: '2025-09-25',
+        start_time: '17:30:00',
+        presenter: 'Nina Gupta',
+        venue: 'Zen Studio, City Center',
+        youtubeUrl: 'https://www.youtube.com/watch?v=4Lb5L-VEm34',
+        status: 'Yet to stream'
+    }
+]
+
+// --- Combine both lists
+const combinedSessions = computed(() => [...events, ...workshops])
+
+// --- Formatters
+function formatDate(dateStr) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' }
+    return new Date(dateStr).toLocaleDateString(undefined, options)
+}
+
+function formatTime(timeStr) {
+    const [h, m] = timeStr.split(':')
+    const hour = parseInt(h)
+    const suffix = hour >= 12 ? 'PM' : 'AM'
+    const formattedHour = ((hour + 11) % 12 + 1)
+    return `${formattedHour}:${m} ${suffix}`
+}
+</script>
