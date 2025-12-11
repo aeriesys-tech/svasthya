@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 // layouts
 import BlankLayout from '@/layouts/BlankLayout.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
@@ -121,7 +122,7 @@ const router = createRouter({
 			component: DashboardView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -130,7 +131,7 @@ const router = createRouter({
 			component: AssessmentView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -139,7 +140,7 @@ const router = createRouter({
 			component: ActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -148,7 +149,7 @@ const router = createRouter({
 			component: LifeskillsActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -157,7 +158,7 @@ const router = createRouter({
 			component: HeadActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -166,7 +167,7 @@ const router = createRouter({
 			component: FiveGoodThingsActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -175,7 +176,7 @@ const router = createRouter({
 			component: ResilienceMapActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -184,7 +185,7 @@ const router = createRouter({
 			component: DecisionMakingActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -193,7 +194,7 @@ const router = createRouter({
 			component: GoalSettingDailyTargetActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -202,7 +203,7 @@ const router = createRouter({
 			component: PlanningActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -211,7 +212,7 @@ const router = createRouter({
 			component: BreakItDownActivitView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -220,7 +221,7 @@ const router = createRouter({
 			component: PausePlanProceedActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -229,7 +230,7 @@ const router = createRouter({
 			component: HeartActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -238,7 +239,7 @@ const router = createRouter({
 			component: EmpathyHeartActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -247,7 +248,7 @@ const router = createRouter({
 			component: LanguageMattersActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -256,7 +257,7 @@ const router = createRouter({
 			component: SilenceSignalsActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -265,7 +266,7 @@ const router = createRouter({
 			component: ConflictResolutionActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -274,7 +275,7 @@ const router = createRouter({
 			component: SocialSkillActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -283,7 +284,7 @@ const router = createRouter({
 			component: GratitudeGalleryAvtivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -292,7 +293,7 @@ const router = createRouter({
 			component: GratitudeWallActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -301,7 +302,7 @@ const router = createRouter({
 			component: NurturingRelationshipActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -310,7 +311,7 @@ const router = createRouter({
 			component: HandActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -319,7 +320,7 @@ const router = createRouter({
 			component: LeadershipActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -328,7 +329,7 @@ const router = createRouter({
 			component: MissionPlanningActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -337,7 +338,7 @@ const router = createRouter({
 			component: MyRoleActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -346,7 +347,7 @@ const router = createRouter({
 			component: ResponsibleCitizenshipActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -355,7 +356,7 @@ const router = createRouter({
 			component: WhyIServeActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -364,7 +365,7 @@ const router = createRouter({
 			component: MotivationMeterActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -373,7 +374,7 @@ const router = createRouter({
 			component: CompetitivenessActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -382,7 +383,7 @@ const router = createRouter({
 			component: HealthActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -391,7 +392,7 @@ const router = createRouter({
 			component: RidingTheWaveActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -400,7 +401,7 @@ const router = createRouter({
 			component: MindfulBreathingExerciseActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -409,7 +410,7 @@ const router = createRouter({
 			component: DisciplineTrackerActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -418,7 +419,7 @@ const router = createRouter({
 			component: WillpowerWalletActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -427,7 +428,7 @@ const router = createRouter({
 			component: QuickExerciseBreakActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -436,7 +437,7 @@ const router = createRouter({
 			component: NutritionLoggingActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -445,7 +446,7 @@ const router = createRouter({
 			component: SafetyCheckActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -454,7 +455,7 @@ const router = createRouter({
 			component: CalmResponseActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -463,7 +464,7 @@ const router = createRouter({
 			component: MirrorMomentsActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -472,7 +473,7 @@ const router = createRouter({
 			component: ReframeThoughtActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -481,7 +482,7 @@ const router = createRouter({
 			component: MoralReasoningActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -490,7 +491,7 @@ const router = createRouter({
 			component: SelfEnhancementView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -499,7 +500,7 @@ const router = createRouter({
 			component: DecisionMakingView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -508,7 +509,7 @@ const router = createRouter({
 			component: ProblemSolvingActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -517,7 +518,7 @@ const router = createRouter({
 			component: EmpathyActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -526,7 +527,7 @@ const router = createRouter({
 			component: ResilienceActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -535,7 +536,7 @@ const router = createRouter({
 			component: CriticalThinkingActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -544,16 +545,16 @@ const router = createRouter({
 			component: CreativeThinkingActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
-		},	
+		},
 		{
 			path: '/self-enhancement/self-awareness',
 			name: 'SelfAwarenessActivityView',
 			component: SelfAwarenessActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -562,7 +563,7 @@ const router = createRouter({
 			component: SleepHygieneActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -571,7 +572,7 @@ const router = createRouter({
 			component: AngerManagementActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -580,7 +581,7 @@ const router = createRouter({
 			component: SelfInsightActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -589,7 +590,7 @@ const router = createRouter({
 			component: EffectiveCommunicationActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -598,7 +599,7 @@ const router = createRouter({
 			component: CopingWithEmotionActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -607,7 +608,7 @@ const router = createRouter({
 			component: CopingWithStressActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -616,7 +617,7 @@ const router = createRouter({
 			component: DigitalDeaddictionActivityView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -625,7 +626,7 @@ const router = createRouter({
 			component: LearnView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -634,7 +635,7 @@ const router = createRouter({
 			component: PhysicalQnAView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -643,7 +644,7 @@ const router = createRouter({
 			component: MentalQnAView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -652,7 +653,7 @@ const router = createRouter({
 			component: ObesityInfoView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -661,7 +662,7 @@ const router = createRouter({
 			component: ObesityQuestionnaire,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -670,7 +671,7 @@ const router = createRouter({
 			component: AngerInfoView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -679,7 +680,7 @@ const router = createRouter({
 			component: AngerQuestionnaire,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -688,7 +689,7 @@ const router = createRouter({
 			component: AngerThermometerActivity,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -697,7 +698,7 @@ const router = createRouter({
 			component: ProgressView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -706,7 +707,7 @@ const router = createRouter({
 			component: ProfilePage,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -715,7 +716,7 @@ const router = createRouter({
 			component: FeedbackView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -724,7 +725,7 @@ const router = createRouter({
 			component: CalendarView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -733,7 +734,7 @@ const router = createRouter({
 			component: RadioView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -742,7 +743,7 @@ const router = createRouter({
 			component: LiveView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
 		},
 		{
@@ -751,18 +752,18 @@ const router = createRouter({
 			component: AppointmentView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
-		},	
+		},
 		{
 			path: '/help',
 			name: 'HelpView',
 			component: HelpView,
 			meta: {
 				layout: MainLayout,
-				auth: false
+				auth: true
 			},
-		},	
+		},
 		{
 			path: '/:pathMatch(.*)*',
 			name: 'NotFoundView',
@@ -773,41 +774,45 @@ const router = createRouter({
 			},
 		}
 	],
-	
+
 })
 
 router.beforeEach((to, from, next) => {
-	// ✅ Handle auto-reload when navigating to the dashboard after login
-	// if (to.path === '/dashboard' && !sessionStorage.getItem('reloaded')) {
-	// 	sessionStorage.setItem('reloaded', 'true');
-	// 	window.location.reload();
-	// 	return;
-	// }
-  
-	// ✅ Redirect to login if the route requires auth but no token is found
-	const adminToken = sessionStorage.getItem('');
-	if (to.meta.auth && !adminToken) {
+	const authStore = useAuthStore();
+
+	// Check if route requires authentication
+	const requiresAuth = to.meta.auth === true;
+	const isAuthenticated = authStore.isAuthenticated;
+
+	// If route requires auth and user is not authenticated, redirect to login
+	if (requiresAuth && !isAuthenticated) {
 		next({ name: 'LoginView' });
-	} else if (!to.meta.auth && adminToken) {
-	  	next({ name: 'DashboardView' });
-	} else {
-	  	next();
+		return;
 	}
+
+	// If user is authenticated and trying to access login/register, redirect to dashboard
+	if (isAuthenticated && (to.name === 'LoginView' || to.path === '/login' || to.path === '/register')) {
+		next({ name: 'DashboardView' });
+		return;
+	}
+
+	// Otherwise, allow navigation
+	next();
 });
 
 router.afterEach(() => {
 	// need this to keep the theme working in all views. settimeout is also necessary maybe it queues them or i dont know maybe its witchcraft
 	setTimeout(() => {
 		if (typeof setActivelink === 'function') setActivelink();
-        if (typeof fixedHeaderSpace === 'function') fixedHeaderSpace();
-        // if (typeof autoThemeMode === 'function') autoThemeMode();
-        if (typeof featherjs === 'function') featherjs();
-        if (typeof coverimg === 'function') coverimg();
-        if (typeof dontclosedd === 'function') dontclosedd();
-        if (typeof checkstrength === 'function') checkstrength();
-        if (typeof bstooltip === 'function') bstooltip();
-        if (typeof swipernavpagination === 'function') swipernavpagination();
-        if (typeof PageLoaderHide === 'function') PageLoaderHide();
+		if (typeof fixedHeaderSpace === 'function') fixedHeaderSpace();
+		// if (typeof autoThemeMode === 'function') autoThemeMode();
+		if (typeof featherjs === 'function') featherjs();
+		if (typeof coverimg === 'function') coverimg();
+		if (typeof dontclosedd === 'function') dontclosedd();
+		if (typeof checkstrength === 'function') checkstrength();
+		if (typeof bstooltip === 'function') bstooltip();
+		if (typeof swipernavpagination === 'function') swipernavpagination();
+		if (typeof PageLoaderHide === 'function') PageLoaderHide();
 	}, 0);
 });
 

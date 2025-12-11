@@ -35,6 +35,14 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+		DB::table('users')->insert([
+            'name' => 'Bharatesh Shanawad',
+            'email' => 'bharatesh.j.s@gmail.com',
+            'password' => Hash::make('1qaz2wsx'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**
