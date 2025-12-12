@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Event;
+use App\Models\Feedback;
 use App\Models\User;
 use App\Mail\OtpMail;
 use Illuminate\Http\Request;
@@ -736,6 +737,39 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Appointment booked successfully',
             'appointment' => $appointment,
+        ], 201);
+    }
+
+    /**
+     * Submit feedback
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function submitFeedback(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'opinion' => 'nullable|string|max:1000',
+        ]);
+
+        $feedback = Feedback::create([
+            'user_id' => $user->id,
+            'rating' => $request->rating,
+            'opinion' => $request->opinion,
+        ]);
+
+        return response()->json([
+            'message' => 'Thank you for your valuable feedback!',
+            'feedback' => $feedback,
         ], 201);
     }
 }

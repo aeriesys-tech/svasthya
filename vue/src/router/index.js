@@ -15,6 +15,7 @@ import AdminDashboardView from '@/views/admin/AdminDashboardView.vue'
 import UsersView from '@/views/admin/UsersView.vue'
 import EventsView from '@/views/admin/EventsView.vue'
 import AppointmentsView from '@/views/admin/AppointmentsView.vue'
+import FeedbacksView from '@/views/admin/FeedbacksView.vue'
 
 // views - User
 import DashboardView from '@/views/user/DashboardView.vue'
@@ -181,6 +182,16 @@ const router = createRouter({
 			path: '/admin/appointments',
 			name: 'AppointmentsView',
 			component: AppointmentsView,
+			meta: {
+				layout: MainLayout,
+				auth: false, // Admin auth handled separately
+				isAdmin: true // Flag to identify admin routes
+			},
+		},
+		{
+			path: '/admin/feedbacks',
+			name: 'FeedbacksView',
+			component: FeedbacksView,
 			meta: {
 				layout: MainLayout,
 				auth: false, // Admin auth handled separately

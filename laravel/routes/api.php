@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reflection', [AuthController::class, 'saveReflection']);
     Route::get('/events', [AuthController::class, 'getEvents']);
     Route::post('/appointment', [AuthController::class, 'bookAppointment']);
+    Route::post('/feedback', [AuthController::class, 'submitFeedback']);
 });
 
 // Admin protected routes
@@ -45,5 +46,6 @@ Route::middleware('admin.auth')->prefix('admin')->group(function () {
     Route::delete('/events/{id}', [AdminController::class, 'deleteEvent']);
     Route::get('/appointments', [AdminController::class, 'getAppointments']);
     Route::put('/appointments/{id}/status', [AdminController::class, 'updateAppointmentStatus']);
+    Route::get('/feedbacks', [AdminController::class, 'getFeedbacks']);
     Route::get('/dashboard-stats', [AdminController::class, 'getDashboardStats']);
 });

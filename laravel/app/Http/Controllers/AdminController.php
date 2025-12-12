@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Models\Appointment;
 use App\Models\Event;
+use App\Models\Feedback;
 use App\Models\Mood;
 use App\Models\Reflection;
 use App\Models\User;
@@ -484,6 +485,42 @@ class AdminController extends Controller
         return response()->json([
             'message' => 'Appointment status updated successfully',
             'appointment' => $appointment,
+        ], 200);
+    }
+
+    /**
+     * Get all feedbacks with pagination
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFeedbacks(Request $request): JsonResponse
+    {
+        $admin = $this->getAuthenticatedAdmin($request);
+
+        if (!$admin) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $perPage = $request->get('per_page', 15);
+        $page = $request->get('page', 1);
+
+        $feedbacks = Feedback::with('user:id,name,email')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json([
+            'feedbacks' => $feedbacks->items(),
+            'pagination' => [
+                'current_page' => $feedbacks->currentPage(),
+                'last_page' => $feedbacks->lastPage(),
+                'per_page' => $feedbacks->perPage(),
+                'total' => $feedbacks->total(),
+                'from' => $feedbacks->firstItem(),
+                'to' => $feedbacks->lastItem(),
+            ],
         ], 200);
     }
 }

@@ -28,6 +28,12 @@
 					</router-link>
 				</li>
 				<li class="nav-item" onclick="contentClick()">
+					<router-link to="/admin/feedbacks" class="nav-link">
+						<i class="menu-icon bi bi-chat-left-text"></i>
+						<span class="menu-name">Feedbacks</span>
+					</router-link>
+				</li>
+				<li class="nav-item" onclick="contentClick()">
 					<a href="#" class="nav-link" @click.prevent="scrollToMoods">
 						<i class="menu-icon bi bi-emoji-smile"></i>
 						<span class="menu-name">Moods</span>
