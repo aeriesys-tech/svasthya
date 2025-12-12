@@ -11,6 +11,7 @@ import '@/assets/css/toast-mods.css';
 import '@/assets/css/main.css';
 
 import '@fortawesome/fontawesome-free/css/all.min.css'
+import i18n from './i18n';
 
 import { useAuthStore } from '@/stores/authStore'
 
@@ -19,6 +20,7 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
+app.use(i18n)
 app.use(VCalendar, {})
 
 // Initialize auth store from sessionStorage

@@ -1,37 +1,30 @@
 <template>
-    <div class="container px-3">
-        <div class="row">
-            <div class="col-12">
+	<div class="container px-3">
+		<div class="row">
+			<div class="col-12">
 
-                <!-- Loop through all modules -->
-                <div
-                    class="text-center mb-4"
-                    v-for="(item, index) in modules"
-                    :key="index"
-                >
-                    <!-- Module Button -->
-                    <button
-                        class="btn btn-accent w-75"
-                        @click="toggleModule(item.key)"
-                    >
-                        {{ item.label }}
-                    </button>
+				<!-- Loop through all modules -->
+				<div class="text-center mb-4" v-for="(item, index) in modules" :key="index">
+					<!-- Module Button -->
+					<button class="btn btn-accent w-75" @click="toggleModule(item.key)">
+						{{ item.label }}
+					</button>
 
-                    <!-- Render Component When Active -->
-                    <component
-                        v-if="active === item.key"
-                        :is="item.component"
-                        @close="toggleModule(item.key)"
-                    />
-                </div>
+					<!-- Render Component When Active -->
+					<component v-if="active === item.key" :is="item.component" @close="toggleModule(item.key)" />
+				</div>
 
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+
+onMounted(() => {
+	scrollToTop();
+});
 
 // Components
 import ObesityQuestionnaire from '@/components/ObesityQuestionnaire.vue'
@@ -48,28 +41,31 @@ import PerceivedStressQuestionnaire from '@/components/PerceivedStressQuestionna
 import SleepQualityQuestionnaire from '@/components/SleepQualityQuestionnaire.vue'
 import HypertensionQuestionnaire from '@/components/HypertensionQuestionnaire.vue'
 import GeneralHealthQuestionnaire from '@/components/GeneralHealthQuestionnaire.vue'
+import { scrollToTop } from '@/utils/scrollHelper';
+import PhysicalHealthQuestionnaire from '@/components/PhysicalHealthQuestionnaire.vue';
 
 // Track the currently open module
 const active = ref(null)
 
 // Toggle module: only one open at a time
 function toggleModule(key) {
-    active.value = (active.value === key) ? null : key
+	active.value = (active.value === key) ? null : key
 }
 
 const modules = [
-    { key: 'obesity', label: 'Obesity Management', component: ObesityQuestionnaire },
-    { key: 'general', label: 'General Health', component: GeneralHealthQuestionnaire },
-    { key: 'hypertension', label: 'Hypertension', component: HypertensionQuestionnaire },
-    { key: 'diabetes', label: 'Diabetes', component: null },
-    { key: 'anger', label: 'Anger Management', component: AngerQuestionnaire },
-    { key: 'financial', label: 'Financial Management', component: FinancialManagement },
-    { key: 'resilience', label: 'Brief Resilience', component: BriefResilienceQuestionnaire },
-    { key: 'anxiety', label: 'Anxiety', component: AnxietyQuestionnaire },
-    { key: 'sleep', label: 'Sleep Quality Index', component: SleepQualityQuestionnaire },
-    { key: 'life', label: 'Satisfaction with Life', component: SatisfactionWithLifeQuestionnaire },
-    { key: 'wellbeing', label: 'WHO - Well-being', component: WellbeingQuestionnaire },
-    { key: 'worklife', label: 'Work-Life Balance', component: WorkLifeBalanceQuestionnaire },
-    { key: 'stress', label: 'Perceived Stress Scale', component: PerceivedStressQuestionnaire }
+	// { key: 'obesity', label: 'Obesity Management', component: ObesityQuestionnaire },
+	// { key: 'general', label: 'General Health', component: GeneralHealthQuestionnaire },
+	// { key: 'hypertension', label: 'Hypertension', component: HypertensionQuestionnaire },
+	// { key: 'diabetes', label: 'Diabetes', component: null },
+	{ key: 'physical', label: 'Physical Health', component: PhysicalHealthQuestionnaire },
+	{ key: 'anger', label: 'Anger Management', component: AngerQuestionnaire },
+	{ key: 'financial', label: 'Financial Management', component: FinancialManagement },
+	{ key: 'resilience', label: 'Brief Resilience', component: BriefResilienceQuestionnaire },
+	{ key: 'anxiety', label: 'Anxiety', component: AnxietyQuestionnaire },
+	{ key: 'sleep', label: 'Sleep Quality Index', component: SleepQualityQuestionnaire },
+	{ key: 'life', label: 'Satisfaction with Life', component: SatisfactionWithLifeQuestionnaire },
+	{ key: 'wellbeing', label: 'WHO - Well-being', component: WellbeingQuestionnaire },
+	{ key: 'worklife', label: 'Work-Life Balance', component: WorkLifeBalanceQuestionnaire },
+	{ key: 'stress', label: 'Perceived Stress Scale', component: PerceivedStressQuestionnaire }
 ];
 </script>

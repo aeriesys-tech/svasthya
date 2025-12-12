@@ -7,7 +7,7 @@
 				<button class="btn btn-outline-accent my-1 w-100 bg-theme-l-gradient-light">
 					<div class="row">
 						<div class="col text-start">🌞</div>
-						<div class="col text-center">Daily Affirmation</div>
+						<div class="col text-center">{{ t('daily_affirmation') }}</div>
 						<div class="col text-end"></div>
 					</div>
 				</button>
@@ -28,11 +28,11 @@
 		</div>
 
 		<!-- Greeting -->
-		<h4 class="mb-4 ps-2">Hi {{ userName }},&nbsp;{{ greeting }}</h4>
+		<h4 class="mb-4 ps-2">Hi {{ userName }},&nbsp;{{ t('greeting') }}</h4>
 
 		<!-- ⭐ FINAL MOOD TRACKER ⭐ -->
 		<div class="card p-3 mb-4">
-			<h5>How are you feeling today?</h5>
+			<h5>{{ t('how_are_you') }}</h5>
 
 			<div class="row mt-3">
 				<div class="col-4 col-md-2 col-lg-2 text-center mb-3" v-for="(mood, index) in moods" :key="index"
@@ -48,7 +48,7 @@
 				v-model.trim="moodDescription" />
 
 			<button class="btn btn-danger w-100 mt-1" @click="saveMood" :disabled="isSavingMood" v-if="!isSavingMood">
-				Save Mood
+				{{ t('save_mood') }}
 			</button>
 			<button class="btn btn-danger w-100 mt-1" disabled v-else>
 				<div class="spinner-border spinner-border-sm" role="status">
@@ -57,20 +57,12 @@
 			</button>
 		</div>
 
-		<!-- Daily Reflection Loop Button -->
-		<div class="mb-4">
-			<button class="btn reflectionbutton w-100 fw-bold rounded" @click="openReflectionModal">
-				<div class="fw-bold fs-5">Daily Reflection Loop</div>
-				<div class="text-muted small">A one-minute everyday clarity habit</div>
-			</button>
-		</div>
-
 		<!-- Reflection Modal -->
 		<div class="modal fade" id="reflectionModal" tabindex="-1" aria-hidden="true" ref="reflectionModal">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content rounded-4 border-danger">
 					<div class="modal-header border-0">
-						<h5 class="modal-title fw-bold">Daily Reflection Loop</h5>
+						<h5 class="modal-title fw-bold">{{ t('daily_reflection_loop') }}</h5>
 						<button type="button" class="btn-close" @click="closeReflectionModal"></button>
 					</div>
 					<div class="modal-body">
@@ -78,7 +70,7 @@
 						<!-- Question Wizard -->
 						<div v-if="currentStep === 1" class="mb-3">
 							<label class="form-label fw-semibold">
-								1️⃣ What happened today that stayed in your mind?
+								What happened today that stayed in your mind?
 							</label>
 							<input type="text" class="form-control" v-model="reflectionAnswers.q1"
 								placeholder="Write one line..." />
@@ -86,7 +78,7 @@
 
 						<div v-if="currentStep === 2" class="mb-3">
 							<label class="form-label fw-semibold">
-								2️⃣ What went through your mind right after that?
+								What went through your mind right after that?
 							</label>
 							<input type="text" class="form-control" v-model="reflectionAnswers.q2"
 								placeholder="Your first thought..." />
@@ -94,7 +86,7 @@
 
 						<div v-if="currentStep === 3" class="mb-3">
 							<label class="form-label fw-semibold">
-								3️⃣ How did that make you feel?
+								How did that make you feel?
 							</label>
 							<div class="d-flex flex-wrap gap-2 mt-2">
 								<button v-for="(option, index) in reflectionMoods" :key="index" type="button"
@@ -108,7 +100,7 @@
 
 						<div v-if="currentStep === 4" class="mb-3">
 							<label class="form-label fw-semibold">
-								4️⃣ What did you do next?
+								What did you do next?
 							</label>
 							<input type="text" class="form-control" v-model="reflectionAnswers.q4"
 								placeholder="Your action or reaction..." />
@@ -116,7 +108,7 @@
 
 						<div v-if="currentStep === 5" class="mb-3">
 							<label class="form-label fw-semibold">
-								5️⃣ If you look at it now, is there another way to see it?
+								If you look at it now, is there another way to see it?
 							</label>
 							<input type="text" class="form-control" v-model="reflectionAnswers.q5"
 								placeholder="A fairer or lighter view..." />
@@ -124,7 +116,7 @@
 
 						<div v-if="currentStep === 6" class="mb-3">
 							<label class="form-label fw-semibold">
-								6️⃣ How do you feel now?
+								How do you feel now?
 							</label>
 							<div class="d-flex justify-content-between mt-2">
 								<div v-for="i in 5" :key="i">
@@ -166,7 +158,7 @@
 		</div>
 
 		<!-- Intro Video -->
-		<h5 class="mb-3 text-center">Intro about <strong>Svasthya</strong></h5>
+		<h5 class="mb-3 text-center">{{ t('intro_svasthya') }}</h5>
 
 		<div class="video-container">
 			<iframe width="560" height="315" src="https://www.youtube.com/embed/N_28cfeGeQM?si=OwnoXY8Y_bGTZI_-"
@@ -181,12 +173,12 @@
 		<div class="mb-4 ps-2 mt-3">
 			<div class="row g-3 mt-2">
 				<div class="col-6 text-center">
-					<div class="border rounded p-4 hover-box" @click="router.push('/physical/qna')">
-						<div>Physical Assessment</div>
-					</div>
+					<!-- <div class="border rounded p-4 hover-box" @click="router.push('/assessment')">
+                        <div>Physical Assessment</div>
+                    </div> -->
 					<div class="video-container mt-3 rounded">
 						<iframe width="560" height="315"
-							src="https://www.youtube.com/embed/5Be62_oZjyo?si=JPlMPxxkTBYnKtxV" frameborder="0"
+							src="https://www.youtube.com/embed/nxThLGUFNmw?si=3HuWagJup2JI_yFK" frameborder="0"
 							allowfullscreen></iframe>
 					</div>
 					<div class="card audio-card mt-3 text-center">
@@ -199,9 +191,9 @@
 				</div>
 
 				<div class="col-6 text-center">
-					<div class="border rounded p-4 hover-box" @click="router.push('/mental/qna')">
-						<div>Mental Health Assessment</div>
-					</div>
+					<!-- <div class="border rounded p-4 hover-box" @click="router.push('/assessment')">
+                        <div>Mental Health Assessment</div>
+                    </div> -->
 					<div class="video-container mt-3 rounded">
 						<iframe width="560" height="315"
 							src="https://www.youtube.com/embed/IyqLDC4US6Y?si=JxfAOoLMtt8YPezP" frameborder="0"
@@ -220,7 +212,7 @@
 
 		<!-- Quick Activities -->
 		<div class="mb-4 ps-2">
-			<h5>Quick activities</h5>
+			<h5>{{ t('quick_activities') }}</h5>
 			<div class="row g-3 mt-2">
 				<div v-for="(activity, index) in activities" :key="index" class="col-12">
 					<div class="border rounded p-2 h-100 d-flex flex-column justify-content-between"
@@ -242,11 +234,13 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n';
 import { useAuthStore } from "@/stores/authStore";
 import Toast from '@/components/Toast.vue';
 import { TOAST_SUCCESS, TOAST_ERROR } from '@/utils/config';
 
 const router = useRouter();
+const { t } = useI18n();
 const authStore = useAuthStore();
 const selectedMood = ref(null);
 const moodDescription = ref('');
@@ -312,8 +306,8 @@ const healthTips = ref([
 
 const activities = [
 	{ title: 'Anger Thermometer & Punch Pillow', duration: '2 min', icon: 'bi bi-soundwave', path: '/activity/anger-thermometer' },
-	{ title: 'THE FORK IN THE ROAD ACTIVITY', duration: '5 min', icon: 'bi bi-sign-railroad', path: '/' },
-	{ title: 'Daily Target Practice – Micro Goal Tracking', duration: '5 min', icon: 'bi bi-bullseye', path: '/' },
+	{ title: 'THE FORK IN THE ROAD ACTIVITY', duration: '5 min', icon: 'bi bi-sign-railroad', path: '/activity/life-skills/head/decision-making' },
+	{ title: 'Daily Target Practice – Micro Goal Tracking', duration: '5 min', icon: 'bi bi-bullseye', path: '/activity/life-skills/head/goal-setting' },
 ];
 
 function navigateTo(path) {
@@ -425,6 +419,7 @@ const saveMood = () => {
 			// Reset form
 			selectedMood.value = null;
 			moodDescription.value = '';
+			openReflectionModal()
 		})
 		.catch((error) => {
 			if (error.response?.data?.message) {

@@ -14,17 +14,17 @@
 		<div class="d-flex gap-2 mb-4">
 			<button
 				class="toggle-pill "
-                :class="{ active: selectedTab === 'blogs' }"				
-				@click="selectedTab = 'blogs'"
-			>
-				Blogs
-			</button>
-			<button
-				class="toggle-pill "
 				:class="{ active: selectedTab === 'videos' }"
 				@click="selectedTab = 'videos'"
 			>
 				Videos
+			</button>
+			<button
+				class="toggle-pill "
+                :class="{ active: selectedTab === 'blogs' }"				
+				@click="selectedTab = 'blogs'"
+			>
+				Blogs
 			</button>
 		</div>
 
@@ -38,7 +38,7 @@
     import BlogList from '@/components/BlogList.vue'
     import VideoList from '@/components/VideoList.vue' // add later
 
-    const selectedTab = ref('blogs')
+    const selectedTab = ref('videos')
 
     const currentComponent = computed(() => {
         return selectedTab.value === 'blogs' ? BlogList : VideoList // replace null with VideoList later
