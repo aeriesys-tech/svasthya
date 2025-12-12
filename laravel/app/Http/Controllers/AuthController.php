@@ -603,4 +603,70 @@ class AuthController extends Controller
             ],
         ], 200);
     }
+
+    /**
+     * Save user mood
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function saveMood(Request $request): JsonResponse
+    {
+        $request->validate([
+            'mood_label' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'date' => 'nullable|date',
+        ]);
+
+        $user = $request->user();
+
+        $mood = \App\Models\Mood::create([
+            'user_id' => $user->id,
+            'mood_label' => $request->mood_label,
+            'description' => $request->description,
+            'date' => $request->date ?? now()->toDateString(),
+        ]);
+
+        return response()->json([
+            'message' => 'Mood saved successfully',
+            'mood' => $mood,
+        ], 200);
+    }
+
+    /**
+     * Save user reflection
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function saveReflection(Request $request): JsonResponse
+    {
+        $request->validate([
+            'q1' => 'required|string|max:1000',
+            'q2' => 'required|string|max:1000',
+            'q3' => 'required|string|max:255',
+            'q4' => 'required|string|max:1000',
+            'q5' => 'required|string|max:1000',
+            'q6' => 'required|integer|min:1|max:5',
+            'date' => 'nullable|date',
+        ]);
+
+        $user = $request->user();
+
+        $reflection = \App\Models\Reflection::create([
+            'user_id' => $user->id,
+            'q1' => $request->q1,
+            'q2' => $request->q2,
+            'q3' => $request->q3,
+            'q4' => $request->q4,
+            'q5' => $request->q5,
+            'q6' => $request->q6,
+            'date' => $request->date ?? now()->toDateString(),
+        ]);
+
+        return response()->json([
+            'message' => 'Reflection saved successfully',
+            'reflection' => $reflection,
+        ], 200);
+    }
 }

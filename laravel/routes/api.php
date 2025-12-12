@@ -23,4 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [AuthController::class, 'getProfile']);
     Route::post('/profile', [AuthController::class, 'updateProfile']);
+    Route::post('/mood', [AuthController::class, 'saveMood']);
+    Route::post('/reflection', [AuthController::class, 'saveReflection']);
 });

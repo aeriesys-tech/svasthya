@@ -44,9 +44,17 @@
 				</div>
 			</div>
 
-			<input type="text" class="w-100 ps-3 rounded" placeholder="Describe your mood" />
+			<input type="text" class="w-100 ps-3 rounded" placeholder="Describe your mood"
+				v-model.trim="moodDescription" />
 
-			<button class="btn btn-danger w-100 mt-1">Save Mood</button>
+			<button class="btn btn-danger w-100 mt-1" @click="saveMood" :disabled="isSavingMood" v-if="!isSavingMood">
+				Save Mood
+			</button>
+			<button class="btn btn-danger w-100 mt-1" disabled v-else>
+				<div class="spinner-border spinner-border-sm" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+			</button>
 		</div>
 
 		<!-- Daily Reflection Loop Button -->
@@ -132,18 +140,25 @@
 
 					</div>
 					<div class="modal-footer border-0">
-						<button v-if="currentStep > 1" type="button" class="btn btn-secondary" @click="prevStep">
+						<button v-if="currentStep > 1" type="button" class="btn btn-secondary" @click="prevStep"
+							:disabled="isSavingReflection">
 							Previous
 						</button>
 
 						<button v-if="currentStep < 6" type="button" class="btn btn-danger" @click="nextStep"
-							:disabled="!isCurrentStepAnswered">
+							:disabled="!isCurrentStepAnswered || isSavingReflection">
 							Next
 						</button>
 
 						<button v-if="currentStep === 6" type="button" class="btn btn-success" @click="submitReflection"
-							:disabled="!isCurrentStepAnswered">
+							:disabled="!isCurrentStepAnswered || isSavingReflection" v-show="!isSavingReflection">
 							Submit
+						</button>
+						<button v-if="currentStep === 6" type="button" class="btn btn-success" disabled
+							v-show="isSavingReflection">
+							<div class="spinner-border spinner-border-sm" role="status">
+								<span class="visually-hidden">Loading...</span>
+							</div>
 						</button>
 					</div>
 				</div>
@@ -221,16 +236,23 @@
 		</div>
 
 	</div>
+	<Toast ref="toastRef" />
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
+import Toast from '@/components/Toast.vue';
+import { TOAST_SUCCESS, TOAST_ERROR } from '@/utils/config';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const selectedMood = ref(null);
+const moodDescription = ref('');
+const isSavingMood = ref(false);
+const isSavingReflection = ref(false);
+const toastRef = ref(null);
 
 const userName = computed(() => {
 	const user = authStore.getUser;
@@ -339,10 +361,86 @@ const isCurrentStepAnswered = computed(() => {
 							: false;
 });
 const submitReflection = () => {
-	console.log("Reflection submitted:", reflectionAnswers.value);
-	closeReflectionModal();
-	currentStep.value = 1;
-	reflectionAnswers.value = { q1: "", q2: "", q3: "", q4: "", q5: "", q6: null };
+	if (!isCurrentStepAnswered.value) {
+		return;
+	}
+
+	isSavingReflection.value = true;
+
+	authStore.post({
+		uri: 'reflection',
+		data: {
+			q1: reflectionAnswers.value.q1,
+			q2: reflectionAnswers.value.q2,
+			q3: reflectionAnswers.value.q3,
+			q4: reflectionAnswers.value.q4,
+			q5: reflectionAnswers.value.q5,
+			q6: reflectionAnswers.value.q6,
+			date: new Date().toISOString().split('T')[0],
+		},
+		meta: { loadingRef: isSavingReflection }
+	})
+		.then((response) => {
+			toastRef.value?.show(response.data.message || 'Reflection saved successfully!', TOAST_SUCCESS);
+			closeReflectionModal();
+			currentStep.value = 1;
+			reflectionAnswers.value = { q1: "", q2: "", q3: "", q4: "", q5: "", q6: null };
+		})
+		.catch((error) => {
+			if (error.response?.data?.message) {
+				toastRef.value?.show(error.response.data.message, TOAST_ERROR);
+			} else if (error.response?.data?.errors) {
+				const firstError = Object.values(error.response.data.errors)[0];
+				if (firstError && firstError[0]) {
+					toastRef.value?.show(firstError[0], TOAST_ERROR);
+				}
+			} else {
+				toastRef.value?.show('Failed to save reflection. Please try again.', TOAST_ERROR);
+			}
+		})
+		.finally(() => {
+			isSavingReflection.value = false;
+		});
+};
+
+const saveMood = () => {
+	if (!selectedMood.value) {
+		toastRef.value?.show('Please select a mood.', TOAST_ERROR);
+		return;
+	}
+
+	isSavingMood.value = true;
+
+	authStore.post({
+		uri: 'mood',
+		data: {
+			mood_label: selectedMood.value,
+			description: moodDescription.value || null,
+			date: new Date().toISOString().split('T')[0],
+		},
+		meta: { loadingRef: isSavingMood }
+	})
+		.then((response) => {
+			toastRef.value?.show(response.data.message || 'Mood saved successfully!', TOAST_SUCCESS);
+			// Reset form
+			selectedMood.value = null;
+			moodDescription.value = '';
+		})
+		.catch((error) => {
+			if (error.response?.data?.message) {
+				toastRef.value?.show(error.response.data.message, TOAST_ERROR);
+			} else if (error.response?.data?.errors) {
+				const firstError = Object.values(error.response.data.errors)[0];
+				if (firstError && firstError[0]) {
+					toastRef.value?.show(firstError[0], TOAST_ERROR);
+				}
+			} else {
+				toastRef.value?.show('Failed to save mood. Please try again.', TOAST_ERROR);
+			}
+		})
+		.finally(() => {
+			isSavingMood.value = false;
+		});
 };
 </script>
 
