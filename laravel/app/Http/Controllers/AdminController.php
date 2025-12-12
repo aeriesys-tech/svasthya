@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Appointment;
+use App\Models\Event;
 use App\Models\Mood;
 use App\Models\Reflection;
 use App\Models\User;
@@ -246,6 +248,242 @@ class AdminController extends Controller
 
         return response()->json([
             'message' => 'Logout successful',
+        ], 200);
+    }
+
+    /**
+     * Get all events with pagination
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getEvents(Request $request): JsonResponse
+    {
+        $admin = $this->getAuthenticatedAdmin($request);
+
+        if (!$admin) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $perPage = $request->get('per_page', 15);
+        $page = $request->get('page', 1);
+
+        $events = Event::orderBy('start_date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json([
+            'events' => $events->items(),
+            'pagination' => [
+                'current_page' => $events->currentPage(),
+                'last_page' => $events->lastPage(),
+                'per_page' => $events->perPage(),
+                'total' => $events->total(),
+                'from' => $events->firstItem(),
+                'to' => $events->lastItem(),
+            ],
+        ], 200);
+    }
+
+    /**
+     * Create a new event
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createEvent(Request $request): JsonResponse
+    {
+        $admin = $this->getAuthenticatedAdmin($request);
+
+        if (!$admin) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $request->validate([
+            'name' => 'required_if:activity_type,EVENT|nullable|string|max:255',
+            'topic' => 'required_if:activity_type,WORKSHOP|nullable|string|max:255',
+            'activity_type' => 'required|in:EVENT,WORKSHOP',
+            'start_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i:s',
+            'created_by' => 'required_if:activity_type,EVENT|nullable|string|max:255',
+            'instructor' => 'required_if:activity_type,WORKSHOP|nullable|string|max:255',
+            'venue' => 'required|string|max:255',
+            'status' => 'nullable|string|in:Open,Confirmed,Cancelled',
+            'max_pax' => 'nullable|integer|min:1',
+            'is_published' => 'nullable|boolean',
+            'description' => 'nullable|string',
+        ]);
+
+        $event = Event::create([
+            'name' => $request->name,
+            'topic' => $request->topic,
+            'activity_type' => $request->activity_type,
+            'start_date' => $request->start_date,
+            'start_time' => $request->start_time,
+            'created_by' => $request->created_by,
+            'instructor' => $request->instructor,
+            'venue' => $request->venue,
+            'status' => $request->status ?? 'Open',
+            'max_pax' => $request->max_pax,
+            'is_published' => $request->is_published ?? true,
+            'description' => $request->description,
+        ]);
+
+        return response()->json([
+            'message' => 'Event created successfully',
+            'event' => $event,
+        ], 201);
+    }
+
+    /**
+     * Update an event
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateEvent(Request $request, $id): JsonResponse
+    {
+        $admin = $this->getAuthenticatedAdmin($request);
+
+        if (!$admin) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $event = Event::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required_if:activity_type,EVENT|nullable|string|max:255',
+            'topic' => 'required_if:activity_type,WORKSHOP|nullable|string|max:255',
+            'activity_type' => 'required|in:EVENT,WORKSHOP',
+            'start_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i:s',
+            'created_by' => 'required_if:activity_type,EVENT|nullable|string|max:255',
+            'instructor' => 'required_if:activity_type,WORKSHOP|nullable|string|max:255',
+            'venue' => 'required|string|max:255',
+            'status' => 'nullable|string|in:Open,Confirmed,Cancelled',
+            'max_pax' => 'nullable|integer|min:1',
+            'is_published' => 'nullable|boolean',
+            'description' => 'nullable|string',
+        ]);
+
+        $event->update([
+            'name' => $request->name,
+            'topic' => $request->topic,
+            'activity_type' => $request->activity_type,
+            'start_date' => $request->start_date,
+            'start_time' => $request->start_time,
+            'created_by' => $request->created_by,
+            'instructor' => $request->instructor,
+            'venue' => $request->venue,
+            'status' => $request->status ?? $event->status,
+            'max_pax' => $request->max_pax,
+            'is_published' => $request->is_published ?? $event->is_published,
+            'description' => $request->description,
+        ]);
+
+        return response()->json([
+            'message' => 'Event updated successfully',
+            'event' => $event,
+        ], 200);
+    }
+
+    /**
+     * Delete an event
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteEvent(Request $request, $id): JsonResponse
+    {
+        $admin = $this->getAuthenticatedAdmin($request);
+
+        if (!$admin) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $event = Event::findOrFail($id);
+        $event->delete();
+
+        return response()->json([
+            'message' => 'Event deleted successfully',
+        ], 200);
+    }
+
+    /**
+     * Get all appointments with pagination
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAppointments(Request $request): JsonResponse
+    {
+        $admin = $this->getAuthenticatedAdmin($request);
+
+        if (!$admin) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $perPage = $request->get('per_page', 15);
+        $page = $request->get('page', 1);
+
+        $appointments = Appointment::with('user:id,name,email,mobile')
+            ->orderBy('appointment_date', 'desc')
+            ->orderBy('appointment_time', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json([
+            'appointments' => $appointments->items(),
+            'pagination' => [
+                'current_page' => $appointments->currentPage(),
+                'last_page' => $appointments->lastPage(),
+                'per_page' => $appointments->perPage(),
+                'total' => $appointments->total(),
+                'from' => $appointments->firstItem(),
+                'to' => $appointments->lastItem(),
+            ],
+        ], 200);
+    }
+
+    /**
+     * Update appointment status
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateAppointmentStatus(Request $request, $id): JsonResponse
+    {
+        $admin = $this->getAuthenticatedAdmin($request);
+
+        if (!$admin) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,cancelled,completed',
+        ]);
+
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = $request->status;
+        $appointment->save();
+
+        return response()->json([
+            'message' => 'Appointment status updated successfully',
+            'appointment' => $appointment,
         ], 200);
     }
 }

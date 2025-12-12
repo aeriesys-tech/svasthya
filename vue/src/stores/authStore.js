@@ -155,6 +155,86 @@ export const useAuthStore = defineStore('auth', () => {
 		});
 	};
 
+	// Put action (for authenticated PUT requests)
+	const put = (payload) => {
+		return new Promise((resolve, reject) => {
+			const isAdminRequest = payload.uri?.startsWith('admin/') || sessionStorage.getItem('is-admin') === 'true';
+			const authToken = isAdminRequest
+				? sessionStorage.getItem('admin-token')
+				: (token.value || sessionStorage.getItem('event-catering-token'));
+
+			if (!authToken && isAdminRequest) {
+				reject({ response: { status: 401, data: { message: 'Unauthenticated.' } } });
+				return;
+			}
+
+			axios
+				.put(`${API_URL}/${payload.uri}`, payload.data, {
+					headers: {
+						Authorization: `Bearer ${authToken}`,
+					},
+					meta: payload.meta || {}
+				})
+				.then((response) => {
+					resolve(response);
+				})
+				.catch((error) => {
+					if (error?.response?.status === 401) {
+						if (isAdminRequest) {
+							sessionStorage.removeItem('admin-token');
+							sessionStorage.removeItem('admin-user');
+							sessionStorage.removeItem('is-admin');
+							window.location.hash = '#/admin/login';
+						} else {
+							logout();
+							window.location.hash = '#/login';
+						}
+					}
+					reject(error);
+				});
+		});
+	};
+
+	// Delete action (for authenticated DELETE requests)
+	const del = (payload) => {
+		return new Promise((resolve, reject) => {
+			const isAdminRequest = payload.uri?.startsWith('admin/') || sessionStorage.getItem('is-admin') === 'true';
+			const authToken = isAdminRequest
+				? sessionStorage.getItem('admin-token')
+				: (token.value || sessionStorage.getItem('event-catering-token'));
+
+			if (!authToken && isAdminRequest) {
+				reject({ response: { status: 401, data: { message: 'Unauthenticated.' } } });
+				return;
+			}
+
+			axios
+				.delete(`${API_URL}/${payload.uri}`, {
+					headers: {
+						Authorization: `Bearer ${authToken}`,
+					},
+					meta: payload.meta || {}
+				})
+				.then((response) => {
+					resolve(response);
+				})
+				.catch((error) => {
+					if (error?.response?.status === 401) {
+						if (isAdminRequest) {
+							sessionStorage.removeItem('admin-token');
+							sessionStorage.removeItem('admin-user');
+							sessionStorage.removeItem('is-admin');
+							window.location.hash = '#/admin/login';
+						} else {
+							logout();
+							window.location.hash = '#/login';
+						}
+					}
+					reject(error);
+				});
+		});
+	};
+
 	// Logout action
 	const logout = () => {
 		user.value = null;
@@ -201,6 +281,8 @@ export const useAuthStore = defineStore('auth', () => {
 		setPermissions,
 		auth,
 		post,
+		put,
+		delete: del, // Export as 'delete' but use 'del' internally to avoid reserved keyword
 		get,
 		logout,
 		init,

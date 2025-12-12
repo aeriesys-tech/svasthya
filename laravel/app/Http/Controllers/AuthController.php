@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
+use App\Models\Event;
 use App\Models\User;
 use App\Mail\OtpMail;
 use Illuminate\Http\Request;
@@ -668,5 +670,72 @@ class AuthController extends Controller
             'message' => 'Reflection saved successfully',
             'reflection' => $reflection,
         ], 200);
+    }
+
+    /**
+     * Get published events for calendar
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getEvents(Request $request): JsonResponse
+    {
+        $year = $request->get('year', date('Y'));
+        $month = $request->get('month', date('m'));
+
+        $events = Event::where('is_published', true)
+            ->whereYear('start_date', $year)
+            ->whereMonth('start_date', $month)
+            ->orderBy('start_date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->get();
+
+        return response()->json([
+            'events' => $events,
+        ], 200);
+    }
+
+    /**
+     * Book an appointment
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bookAppointment(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $request->validate([
+            'officer_id' => 'required|integer',
+            'officer_name' => 'required|string|max:255',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required|date_format:H:i',
+            'place' => 'required|string|max:255',
+            'slot' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+        ]);
+
+        $appointment = Appointment::create([
+            'user_id' => $user->id,
+            'officer_id' => $request->officer_id,
+            'officer_name' => $request->officer_name,
+            'appointment_date' => $request->appointment_date,
+            'appointment_time' => $request->appointment_time,
+            'place' => $request->place,
+            'slot' => $request->slot,
+            'status' => 'pending',
+            'notes' => $request->notes,
+        ]);
+
+        return response()->json([
+            'message' => 'Appointment booked successfully',
+            'appointment' => $appointment,
+        ], 201);
     }
 }

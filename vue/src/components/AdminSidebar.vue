@@ -16,6 +16,18 @@
 					</router-link>
 				</li>
 				<li class="nav-item" onclick="contentClick()">
+					<router-link to="/admin/events" class="nav-link">
+						<i class="menu-icon bi bi-calendar-event"></i>
+						<span class="menu-name">Events</span>
+					</router-link>
+				</li>
+				<li class="nav-item" onclick="contentClick()">
+					<router-link to="/admin/appointments" class="nav-link">
+						<i class="menu-icon bi bi-calendar-check"></i>
+						<span class="menu-name">Appointments</span>
+					</router-link>
+				</li>
+				<li class="nav-item" onclick="contentClick()">
 					<a href="#" class="nav-link" @click.prevent="scrollToMoods">
 						<i class="menu-icon bi bi-emoji-smile"></i>
 						<span class="menu-name">Moods</span>

@@ -13,6 +13,8 @@ import ResetPasswordView from '@/views/auth/ResetPasswordView.vue'
 import AdminLoginView from '@/views/admin/AdminLoginView.vue'
 import AdminDashboardView from '@/views/admin/AdminDashboardView.vue'
 import UsersView from '@/views/admin/UsersView.vue'
+import EventsView from '@/views/admin/EventsView.vue'
+import AppointmentsView from '@/views/admin/AppointmentsView.vue'
 
 // views - User
 import DashboardView from '@/views/user/DashboardView.vue'
@@ -159,6 +161,26 @@ const router = createRouter({
 			path: '/admin/users',
 			name: 'UsersView',
 			component: UsersView,
+			meta: {
+				layout: MainLayout,
+				auth: false, // Admin auth handled separately
+				isAdmin: true // Flag to identify admin routes
+			},
+		},
+		{
+			path: '/admin/events',
+			name: 'EventsView',
+			component: EventsView,
+			meta: {
+				layout: MainLayout,
+				auth: false, // Admin auth handled separately
+				isAdmin: true // Flag to identify admin routes
+			},
+		},
+		{
+			path: '/admin/appointments',
+			name: 'AppointmentsView',
+			component: AppointmentsView,
 			meta: {
 				layout: MainLayout,
 				auth: false, // Admin auth handled separately

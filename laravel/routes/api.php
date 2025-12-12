@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile', [AuthController::class, 'updateProfile']);
     Route::post('/mood', [AuthController::class, 'saveMood']);
     Route::post('/reflection', [AuthController::class, 'saveReflection']);
+    Route::get('/events', [AuthController::class, 'getEvents']);
+    Route::post('/appointment', [AuthController::class, 'bookAppointment']);
 });
 
 // Admin protected routes
@@ -37,5 +39,11 @@ Route::middleware('admin.auth')->prefix('admin')->group(function () {
     Route::get('/moods', [AdminController::class, 'getMoods']);
     Route::get('/reflections', [AdminController::class, 'getReflections']);
     Route::get('/users', [AdminController::class, 'getUsers']);
+    Route::get('/events', [AdminController::class, 'getEvents']);
+    Route::post('/events', [AdminController::class, 'createEvent']);
+    Route::put('/events/{id}', [AdminController::class, 'updateEvent']);
+    Route::delete('/events/{id}', [AdminController::class, 'deleteEvent']);
+    Route::get('/appointments', [AdminController::class, 'getAppointments']);
+    Route::put('/appointments/{id}/status', [AdminController::class, 'updateAppointmentStatus']);
     Route::get('/dashboard-stats', [AdminController::class, 'getDashboardStats']);
 });

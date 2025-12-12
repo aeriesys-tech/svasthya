@@ -70,19 +70,27 @@
 
 			<!-- Submit Button -->
 			<div class="col-12">
-				<button class="btn btn-outline-accent text-dark w-100" @click="submitBooking">
-					Book Appointment
+				<button class="btn btn-outline-accent text-dark w-100" @click="submitBooking" :disabled="isSubmitting">
+					<span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+					{{ isSubmitting ? 'Booking...' : 'Book Appointment' }}
 				</button>
 			</div>
 		</div>
 	</div>
+	<Toast ref="toastRef" />
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
+import Toast from '@/components/Toast.vue'
+import { TOAST_SUCCESS, TOAST_ERROR } from '@/utils/config'
 
 const router = useRouter()
+const authStore = useAuthStore()
+const toastRef = ref(null)
+const isSubmitting = ref(false)
 
 const wellnessOfficers = [
 	{ id: 1, name: 'Dr. Aisha Khan' },
@@ -147,13 +155,43 @@ function submitBooking() {
 	validateSlots()
 
 	if (!errors.officer && !errors.date && !errors.time && !errors.place && !errors.slots) {
-		alert(
-			`Appointment booked with Officer ID ${appointment.officer}
-			on ${appointment.date} at ${appointment.time}
-			Place: ${appointment.place}
-			Slot: ${appointment.slots}`
-		)
-		router.push('/dashboard')
+		isSubmitting.value = true
+
+		// Find officer name
+		const selectedOfficer = wellnessOfficers.find(o => o.id === parseInt(appointment.officer))
+
+		authStore.post({
+			uri: 'appointment',
+			data: {
+				officer_id: parseInt(appointment.officer),
+				officer_name: selectedOfficer?.name || '',
+				appointment_date: appointment.date,
+				appointment_time: appointment.time,
+				place: appointment.place,
+				slot: appointment.slots,
+			},
+			meta: {}
+		})
+			.then(() => {
+				toastRef.value?.show('Appointment booked successfully!', TOAST_SUCCESS)
+				// Reset form
+				appointment.officer = ''
+				appointment.date = ''
+				appointment.time = ''
+				appointment.place = ''
+				appointment.slots = ''
+				// Redirect after a short delay
+				setTimeout(() => {
+					router.push('/dashboard')
+				}, 1500)
+			})
+			.catch((error) => {
+				const message = error.response?.data?.message || 'Failed to book appointment. Please try again.'
+				toastRef.value?.show(message, TOAST_ERROR)
+			})
+			.finally(() => {
+				isSubmitting.value = false
+			})
 	}
 }
 </script>
