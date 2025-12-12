@@ -24,6 +24,16 @@
 						<!-- Step 1: Basic Info -->
 						<div v-if="step === 1">
 							<div class="form-floating mb-3">
+								<input type="text" class="form-control" :class="{ 'border-danger': errors.name }"
+									id="name" placeholder="Enter your name" v-model.trim="form.name" ref="nameInput"
+									autofocus />
+								<label for="name">Name*</label>
+								<span v-if="errors.name" class="text-danger small d-block mt-1">{{ errors.name[0] ||
+									errors.name
+								}}</span>
+							</div>
+
+							<div class="form-floating mb-3">
 								<input type="text" class="form-control" :class="{ 'border-danger': errors.kgid }"
 									id="kgid" placeholder="KGID Number" v-model.trim="form.kgid" />
 								<label for="kgid">KGID Number*</label>
@@ -33,28 +43,21 @@
 							</div>
 
 							<div class="form-floating mb-3">
+								<input type="email" class="form-control" :class="{ 'border-danger': errors.email }"
+									id="email" placeholder="Enter your email address" v-model.trim="form.email" />
+								<label for="email">Email*</label>
+								<span v-if="errors.email" class="text-danger small d-block mt-1">{{ errors.email[0] ||
+									errors.email
+								}}</span>
+							</div>
+
+							<div class="form-floating mb-3">
 								<input type="tel" class="form-control" :class="{ 'border-danger': errors.mobile }"
 									id="mobile" placeholder="Mobile Number" v-model.trim="form.mobile" />
 								<label for="mobile">Mobile Number*</label>
 								<span v-if="errors.mobile" class="text-danger small d-block mt-1">{{ errors.mobile[0] ||
-									errors.mobile }}</span>
-							</div>
-
-							<div class="position-relative mb-3">
-								<div class="form-floating">
-									<input :type="showPassword ? 'text' : 'password'" class="form-control"
-										:class="{ 'border-danger': errors.password }" id="password"
-										placeholder="Password" v-model.trim="form.password">
-									<label for="password">Password*</label>
-								</div>
-								<button type="button"
-									class="btn btn-square btn-link text-theme-1 position-absolute end-0 top-0 mt-2 me-2"
-									@click="togglePassword">
-									<i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-								</button>
-								<span v-if="errors.password" class="text-danger small d-block mt-1">{{
-									errors.password[0] ||
-									errors.password }}</span>
+									errors.mobile
+								}}</span>
 							</div>
 
 							<button class="btn btn-lg btn-theme w-100 mb-3" @click="requestOtp" :disabled="loading"
@@ -113,12 +116,23 @@
 						<div v-else-if="step === 3">
 							<form @submit.prevent="submitProfile">
 								<div class="row">
-									<!-- Name -->
+									<!-- Password -->
 									<div class="col-12">
-										<div class="form-floating mb-3">
-											<input type="text" class="form-control" id="name"
-												v-model.trim="profile.name" />
-											<label for="name">Name*</label>
+										<div class="position-relative mb-3">
+											<div class="form-floating">
+												<input :type="showPassword ? 'text' : 'password'" class="form-control"
+													:class="{ 'border-danger': errors.password }" id="password"
+													placeholder="Password" v-model.trim="form.password">
+												<label for="password">Password*</label>
+											</div>
+											<button type="button"
+												class="btn btn-square btn-link text-theme-1 position-absolute end-0 top-0 mt-2 me-2"
+												@click="togglePassword">
+												<i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+											</button>
+											<span v-if="errors.password" class="text-danger small d-block mt-1">{{
+												errors.password[0] ||
+												errors.password }}</span>
 										</div>
 									</div>
 
@@ -127,15 +141,6 @@
 										<div class="form-floating mb-3">
 											<input type="date" class="form-control" id="dob" v-model="profile.dob" />
 											<label for="dob">Date of Birth*</label>
-										</div>
-									</div>
-
-									<!-- Phone Number -->
-									<div class="col-12">
-										<div class="form-floating mb-3">
-											<input type="tel" class="form-control" id="phone"
-												v-model.trim="profile.phone" />
-											<label for="phone">Phone Number*</label>
 										</div>
 									</div>
 
@@ -234,7 +239,7 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { TOAST_SUCCESS, TOAST_ERROR } from '@/utils/config';
@@ -249,6 +254,7 @@ const loading = ref(false)
 const countdown = ref(0)
 const errors = ref({})
 const showPassword = ref(false)
+const nameInput = ref(null)
 let timer = null
 
 const togglePassword = () => {
@@ -256,16 +262,16 @@ const togglePassword = () => {
 };
 
 const form = ref({
+	name: '',
 	kgid: '',
+	email: '',
 	mobile: '',
 	password: '',
 	otp: ''
 })
 
 const profile = ref({
-	name: '',
 	dob: '',
-	phone: '',
 	gender: '',
 	designation: '',
 	division: '',
@@ -622,7 +628,7 @@ function startCountdown() {
 }
 
 const requestOtp = () => {
-	if (!form.value.kgid || !form.value.mobile || !form.value.password) {
+	if (!form.value.name || !form.value.kgid || !form.value.email || !form.value.mobile) {
 		toastRef.value.show("Please fill all required fields.", TOAST_ERROR);
 		return
 	}
@@ -633,14 +639,15 @@ const requestOtp = () => {
 	authStore.auth({
 		uri: 'register/request-otp',
 		data: {
+			name: form.value.name,
 			kgid: form.value.kgid,
-			mobile: form.value.mobile,
-			password: form.value.password
+			email: form.value.email,
+			mobile: form.value.mobile
 		},
 		meta: { loadingRef: loading }
 	})
 		.then((response) => {
-			toastRef.value.show("OTP sent successfully.", TOAST_SUCCESS);
+			toastRef.value.show("OTP sent successfully to your email.", TOAST_SUCCESS);
 			step.value = 2
 			startCountdown()
 		})
@@ -666,13 +673,12 @@ const resendOtp = () => {
 	authStore.auth({
 		uri: 'register/resend-otp',
 		data: {
-			kgid: form.value.kgid,
-			mobile: form.value.mobile
+			email: form.value.email
 		},
 		meta: { loadingRef: loading }
 	})
 		.then((response) => {
-			toastRef.value.show("OTP resent successfully.", TOAST_SUCCESS);
+			toastRef.value.show("OTP resent successfully to your email.", TOAST_SUCCESS);
 			startCountdown()
 		})
 		.catch((error) => {
@@ -697,8 +703,7 @@ const verifyOtp = () => {
 	authStore.auth({
 		uri: 'register/verify-otp',
 		data: {
-			kgid: form.value.kgid,
-			mobile: form.value.mobile,
+			email: form.value.email,
 			otp: form.value.otp
 		},
 		meta: { loadingRef: loading }
@@ -725,7 +730,7 @@ const verifyOtp = () => {
 
 const submitProfile = () => {
 	// Validate required fields
-	if (!profile.value.name || !profile.value.dob || !profile.value.phone ||
+	if (!form.value.password || !profile.value.dob ||
 		!profile.value.gender || !profile.value.designation || !profile.value.division ||
 		!profile.value.currentWorking || !profile.value.qualification) {
 		toastRef.value.show("Please complete all required fields.", TOAST_ERROR);
@@ -737,7 +742,9 @@ const submitProfile = () => {
 
 	// Combine all registration data
 	const registrationData = {
+		name: form.value.name,
 		kgid: form.value.kgid,
+		email: form.value.email,
 		mobile: form.value.mobile,
 		password: form.value.password,
 		otp: form.value.otp,
@@ -784,6 +791,12 @@ const goBackToStep = (n) => {
 	step.value = n
 	window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+
+onMounted(() => {
+	if (nameInput.value) {
+		nameInput.value.focus();
+	}
+});
 
 onUnmounted(() => {
 	if (timer) clearInterval(timer)
