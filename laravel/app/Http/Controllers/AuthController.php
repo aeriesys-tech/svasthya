@@ -524,4 +524,83 @@ class AuthController extends Controller
             'message' => 'Password reset successfully',
         ], 200);
     }
+
+    /**
+     * Get authenticated user profile
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'kgid' => $user->kgid,
+                'email' => $user->email,
+                'mobile' => $user->mobile,
+                'dob' => $user->dob,
+                'phone' => $user->phone,
+                'gender' => $user->gender,
+                'designation' => $user->designation,
+                'division' => $user->division,
+                'current_working' => $user->current_working,
+                'qualification' => $user->qualification,
+            ],
+        ], 200);
+    }
+
+    /**
+     * Update authenticated user profile
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'dob' => 'sometimes|date|nullable',
+            'phone' => 'sometimes|string|max:20|nullable',
+            'gender' => 'sometimes|in:Male,Female,Others|nullable',
+            'designation' => 'sometimes|string|max:255|nullable',
+            'division' => 'sometimes|string|max:255|nullable',
+            'current_working' => 'sometimes|string|max:255|nullable',
+            'qualification' => 'sometimes|string|max:255|nullable',
+        ]);
+
+        $user->update([
+            'name' => $request->input('name', $user->name),
+            'dob' => $request->input('dob', $user->dob),
+            'phone' => $request->input('phone', $user->phone),
+            'gender' => $request->input('gender', $user->gender),
+            'designation' => $request->input('designation', $user->designation),
+            'division' => $request->input('division', $user->division),
+            'current_working' => $request->input('current_working', $user->current_working),
+            'qualification' => $request->input('qualification', $user->qualification),
+        ]);
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'kgid' => $user->kgid,
+                'email' => $user->email,
+                'mobile' => $user->mobile,
+                'dob' => $user->dob,
+                'phone' => $user->phone,
+                'gender' => $user->gender,
+                'designation' => $user->designation,
+                'division' => $user->division,
+                'current_working' => $user->current_working,
+                'qualification' => $user->qualification,
+            ],
+        ], 200);
+    }
 }
