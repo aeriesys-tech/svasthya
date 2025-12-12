@@ -2,7 +2,7 @@
     <header class="adminuiux-header">
         <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container-fluid d-flex align-items-center justify-content-between">
-                
+
                 <!-- LEFT SECTION -->
                 <div class="d-flex align-items-center">
                     <!-- Sidebar toggle -->
@@ -55,8 +55,8 @@
 
             </div>
             <br>
-            <!-- TIMER BELOW RIGHT ICONS -->
-            <div class="timer-bar py-1 d-flex align-items-center justify-content-center w-100" >
+            <!-- TIMER BELOW RIGHT ICONS - Hidden for admin routes -->
+            <div v-if="!isAdminRoute" class="timer-bar py-1 d-flex align-items-center justify-content-center w-100" >
                 <span class="fw-bold">⏱ {{ runtime }}</span>
             </div>
         </nav>
@@ -64,8 +64,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { notifications } from '@/stores/notificationStore';
+
+const route = useRoute();
+
+// Check if current route is an admin route
+const isAdminRoute = computed(() => {
+	return route.path.startsWith('/admin') || route.meta?.isAdmin === true;
+});
 
 const runtime = ref('00:00:00'); // HH:mm:ss
 let secondsElapsed = 0;

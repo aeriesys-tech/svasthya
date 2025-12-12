@@ -65,10 +65,21 @@ export const useAuthStore = defineStore('auth', () => {
 	// Post action (for authenticated requests)
 	const post = (payload) => {
 		return new Promise((resolve, reject) => {
+			// Check if it's an admin request (check URI first, then sessionStorage)
+			const isAdminRequest = payload.uri?.startsWith('admin/') || sessionStorage.getItem('is-admin') === 'true';
+			const authToken = isAdminRequest
+				? sessionStorage.getItem('admin-token')
+				: (token.value || sessionStorage.getItem('event-catering-token'));
+
+			if (!authToken && isAdminRequest) {
+				reject({ response: { status: 401, data: { message: 'Unauthenticated.' } } });
+				return;
+			}
+
 			axios
 				.post(`${API_URL}/${payload.uri}`, payload.data, {
 					headers: {
-						Authorization: `Bearer ${token.value || sessionStorage.getItem('event-catering-token')}`,
+						Authorization: `Bearer ${authToken}`,
 					},
 					meta: payload.meta || {}
 				})
@@ -76,10 +87,17 @@ export const useAuthStore = defineStore('auth', () => {
 					resolve(response);
 				})
 				.catch((error) => {
-					if (error?.response?.data?.message === 'Unauthenticated.') {
-						logout();
-						window.location.href = '/#/login';
-						window.location.reload();
+					if (error?.response?.data?.message === 'Unauthenticated.' || error?.response?.status === 401) {
+						if (isAdminRequest) {
+							sessionStorage.removeItem('admin-token');
+							sessionStorage.removeItem('admin-user');
+							sessionStorage.removeItem('is-admin');
+							// Don't reload, just redirect
+							window.location.hash = '#/admin/login';
+						} else {
+							logout();
+							window.location.hash = '#/login';
+						}
 					}
 					reject(error);
 				});
@@ -89,10 +107,25 @@ export const useAuthStore = defineStore('auth', () => {
 	// Get action (for authenticated GET requests)
 	const get = (payload) => {
 		return new Promise((resolve, reject) => {
+			// Check if it's an admin request (check URI first, then sessionStorage)
+			const isAdminRequest = payload.uri?.startsWith('admin/') || sessionStorage.getItem('is-admin') === 'true';
+			const authToken = isAdminRequest
+				? sessionStorage.getItem('admin-token')
+				: (token.value || sessionStorage.getItem('event-catering-token'));
+
+			if (!authToken) {
+				if (isAdminRequest) {
+					reject({ response: { status: 401, data: { message: 'Unauthenticated.' } } });
+				} else {
+					reject({ response: { status: 401, data: { message: 'Unauthenticated.' } } });
+				}
+				return;
+			}
+
 			axios
 				.get(`${API_URL}/${payload.uri}`, {
 					headers: {
-						Authorization: `Bearer ${token.value || sessionStorage.getItem('event-catering-token')}`,
+						Authorization: `Bearer ${authToken}`,
 					},
 					meta: payload.meta || {}
 				})
@@ -100,10 +133,22 @@ export const useAuthStore = defineStore('auth', () => {
 					resolve(response);
 				})
 				.catch((error) => {
-					if (error?.response?.data?.message === 'Unauthenticated.') {
-						logout();
-						window.location.href = '/#/login';
-						window.location.reload();
+					// Only redirect on 401 if it's actually an authentication error
+					if (error?.response?.status === 401) {
+						if (isAdminRequest) {
+							sessionStorage.removeItem('admin-token');
+							sessionStorage.removeItem('admin-user');
+							sessionStorage.removeItem('is-admin');
+							// Use router instead of window.location to avoid conflicts
+							if (window.location.hash !== '#/admin/login') {
+								window.location.hash = '#/admin/login';
+							}
+						} else {
+							logout();
+							if (window.location.hash !== '#/login' && window.location.hash !== '#/') {
+								window.location.hash = '#/login';
+							}
+						}
 					}
 					reject(error);
 				});

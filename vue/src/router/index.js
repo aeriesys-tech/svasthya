@@ -3,35 +3,46 @@ import { useAuthStore } from '@/stores/authStore'
 // layouts
 import BlankLayout from '@/layouts/BlankLayout.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
-// views
-import LoginView from '@/views/LoginView.vue'
-import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
-import ResetPasswordView from '@/views/ResetPasswordView.vue'
-import DashboardView from '@/views/DashboardView.vue'
+// views - Auth
+import LoginView from '@/views/auth/LoginView.vue'
+import RegisterView from '@/views/auth/RegisterView.vue'
+import ForgotPasswordView from '@/views/auth/ForgotPasswordView.vue'
+import ResetPasswordView from '@/views/auth/ResetPasswordView.vue'
+
+// views - Admin
+import AdminLoginView from '@/views/admin/AdminLoginView.vue'
+import AdminDashboardView from '@/views/admin/AdminDashboardView.vue'
+import UsersView from '@/views/admin/UsersView.vue'
+
+// views - User
+import DashboardView from '@/views/user/DashboardView.vue'
+import ProfilePage from '@/views/user/ProfilePage.vue'
+import CalendarView from '@/views/user/CalendarView.vue'
+import LearnView from '@/views/user/LearnView.vue'
+import PhysicalQnAView from '@/views/user/PhysicalQnAView.vue'
+import MentalQnAView from '@/views/user/MentalQnAView.vue'
+import RadioView from '@/views/user/RadioView.vue'
+import LiveView from '@/views/user/LiveView.vue'
+import AppointmentView from '@/views/user/AppointmentView.vue'
+import AssessmentView from '@/views/user/AssessmentView.vue'
+import ProgressView from '@/views/user/ProgressView.vue'
+import FeedbackView from '@/views/user/FeedbackView.vue'
+import HelpView from '@/views/user/HelpView.vue'
+
+// views - Other
 import NotFoundView from '@/views/NotFoundView.vue'
-import CalendarView from '@/views/CalendarView.vue'
-import LearnView from '@/views/LearnView.vue'
-import PhysicalQnAView from '@/views/PhysicalQnAView.vue'
-import MentalQnAView from '@/views/MentalQnAView.vue'
 import ObesityInfoView from '@/views/ObesityInfoView.vue'
 import ObesityQuestionnaire from '@/components/ObesityQuestionnaire.vue'
 import AngerInfoView from '@/views/AngerInfoView.vue'
 import AngerQuestionnaire from '@/components/AngerQuestionnaire.vue'
 import AngerThermometerActivity from '@/views/AngerThermometerActivity.vue'
-import ProfilePage from '@/views/ProfilePage.vue'
-import RadioView from '@/views/RadioView.vue'
-import LiveView from '@/views/LiveView.vue'
-import AppointmentView from '@/views/AppointmentView.vue'
 // import DecisionMakingActivityView from '../views/life-skill-activities/head/DecisionMakingActivityView.vue'
 import EmpathyActivityView from '../views/self-enhancement-activities/EmpathyActivityView.vue'
 import SelfAwarenessActivityView from '../views/self-enhancement-activities/SelfAwarenessActivityView.vue'
-import AssessmentView from '../views/AssessmentView.vue'
 import ResilienceActivityView from '../views/self-enhancement-activities/ResilienceActivityView.vue'
 import SleepHygieneActivityView from '../views/self-enhancement-activities/SleepHygieneActivityView.vue'
 import AngerManagementActivityView from '../views/self-enhancement-activities/AngerManagementActivityView.vue'
 import SelfInsightActivityView from '../views/self-enhancement-activities/SelfInsightActivityView.vue'
-import RegisterView from '../views/RegisterView.vue'
-import FeedbackView from '../views/FeedbackView.vue'
 import LifeskillsActivityView from '../views/LifeskillsActivityView.vue'
 import SelfEnhancementView from '../views/SelfEnhancementView.vue'
 import ActivityView from '../views/ActivityView.vue'
@@ -59,7 +70,6 @@ import CreativeThinkingActivityView from '../views/self-enhancement-activities/C
 import CriticalThinkingActivityView from '../views/self-enhancement-activities/CriticalThinkingActivityView.vue'
 import DecisionMakingView from '../views/self-enhancement-activities/DecisionMakingView.vue'
 import ProblemSolvingActivityView from '../views/self-enhancement-activities/ProblemSolvingActivityView.vue'
-import ProgressView from '../views/ProgressView.vue'
 import EffectiveCommunicationActivityView from '../views/self-enhancement-activities/EffectiveCommunicationActivityView.vue'
 import CopingWithEmotionActivityView from '../views/self-enhancement-activities/CopingWithEmotionActivityView.vue'
 import CopingWithStressActivityView from '../views/self-enhancement-activities/CopingWithStressActivityView.vue'
@@ -82,7 +92,6 @@ import CalmResponseActivityView from '../views/life-skill-activities/health/Calm
 import MirrorMomentsActivityView from '../views/life-skill-activities/health/MirrorMomentsActivityView.vue'
 import ReframeThoughtActivityView from '../views/life-skill-activities/health/ReframeThoughtActivityView.vue'
 import MoralReasoningActivityView from '../views/life-skill-activities/health/MoralReasoningActivityView.vue'
-import HelpView from '../views/HelpView.vue'
 
 
 
@@ -124,6 +133,36 @@ const router = createRouter({
 			meta: {
 				layout: BlankLayout,
 				auth: false
+			},
+		},
+		{
+			path: '/admin/login',
+			name: 'AdminLoginView',
+			component: AdminLoginView,
+			meta: {
+				layout: BlankLayout,
+				auth: false,
+				isAdmin: true
+			},
+		},
+		{
+			path: '/admin/dashboard',
+			name: 'AdminDashboardView',
+			component: AdminDashboardView,
+			meta: {
+				layout: MainLayout,
+				auth: false, // Admin auth handled separately
+				isAdmin: true // Flag to identify admin routes
+			},
+		},
+		{
+			path: '/admin/users',
+			name: 'UsersView',
+			component: UsersView,
+			meta: {
+				layout: MainLayout,
+				auth: false, // Admin auth handled separately
+				isAdmin: true // Flag to identify admin routes
 			},
 		},
 		{
@@ -790,7 +829,50 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 	const authStore = useAuthStore();
 
-	// Check if route requires authentication
+	// Admin routes handling - must be checked first before user auth
+	if (to.path.startsWith('/admin')) {
+		const adminToken = sessionStorage.getItem('admin-token');
+		const isAdmin = sessionStorage.getItem('is-admin') === 'true';
+
+		console.log('Router guard - Admin route:', to.path, 'Token:', !!adminToken, 'IsAdmin:', isAdmin);
+
+		// Admin login page
+		if (to.name === 'AdminLoginView' || to.path === '/admin/login') {
+			// If admin is already logged in, redirect to admin dashboard
+			if (adminToken && isAdmin) {
+				console.log('Admin already logged in, redirecting to dashboard');
+				next({ name: 'AdminDashboardView' });
+				return;
+			}
+			// Allow access to admin login page
+			console.log('Allowing access to admin login page');
+			next();
+			return;
+		}
+
+		// Admin dashboard or any other admin route
+		if (to.name === 'AdminDashboardView' || to.path.startsWith('/admin/')) {
+			// If admin is not logged in, redirect to admin login
+			if (!adminToken || !isAdmin) {
+				console.log('Admin not authenticated, redirecting to login');
+				next({ name: 'AdminLoginView' });
+				return;
+			}
+			// Admin is authenticated, allow access
+			console.log('Admin authenticated, allowing access');
+			next();
+			return;
+		}
+
+		// Should not reach here for admin routes, but just in case
+		next();
+		return;
+	}
+
+	// Admin routes are already handled above and next() was called, so we should never reach here
+	// But if we do, it means the route wasn't an admin route, so continue with user auth checks
+
+	// Check if route requires authentication (only for user routes)
 	const requiresAuth = to.meta.auth === true;
 	const isAuthenticated = authStore.isAuthenticated;
 

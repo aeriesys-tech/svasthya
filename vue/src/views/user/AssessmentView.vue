@@ -4,13 +4,13 @@
             <div class="col-12">
 
                 <!-- Loop through all modules -->
-                <div 
+                <div
                     class="text-center mb-4"
-                    v-for="(item, index) in modules" 
+                    v-for="(item, index) in modules"
                     :key="index"
                 >
                     <!-- Module Button -->
-                    <button 
+                    <button
                         class="btn btn-accent w-75"
                         @click="toggleModule(item.key)"
                     >
@@ -18,10 +18,10 @@
                     </button>
 
                     <!-- Render Component When Active -->
-                    <component 
+                    <component
                         v-if="active === item.key"
                         :is="item.component"
-                        @close="toggleModule(item.key)" 
+                        @close="toggleModule(item.key)"
                     />
                 </div>
 
@@ -41,13 +41,13 @@ import PsychologicalDisorder from '@/components/PsychologicalDisorder.vue'
 import MentalStatus from '@/components/MentalStatus.vue'
 import BriefResilienceQuestionnaire from '@/components/BriefResilienceQuestionnaire.vue'
 import AnxietyQuestionnaire from '@/components/AnxietyQuestionnaire.vue'
-import SatisfactionWithLifeQuestionnaire from '../components/SatisfactionWithLifeQuestionnaire.vue'
-import WellbeingQuestionnaire from '../components/WellbeingQuestionnaire.vue'
-import WorkLifeBalanceQuestionnaire from '../components/WorkLifeBalanceQuestionnaire.vue'
-import PerceivedStressQuestionnaire from '../components/PerceivedStressQuestionnaire.vue'
-import SleepQualityQuestionnaire from '../components/SleepQualityQuestionnaire.vue'
-import HypertensionQuestionnaire from '../components/HypertensionQuestionnaire.vue'
-import GeneralHealthQuestionnaire from '../components/GeneralHealthQuestionnaire.vue'
+import SatisfactionWithLifeQuestionnaire from '@/components/SatisfactionWithLifeQuestionnaire.vue'
+import WellbeingQuestionnaire from '@/components/WellbeingQuestionnaire.vue'
+import WorkLifeBalanceQuestionnaire from '@/components/WorkLifeBalanceQuestionnaire.vue'
+import PerceivedStressQuestionnaire from '@/components/PerceivedStressQuestionnaire.vue'
+import SleepQualityQuestionnaire from '@/components/SleepQualityQuestionnaire.vue'
+import HypertensionQuestionnaire from '@/components/HypertensionQuestionnaire.vue'
+import GeneralHealthQuestionnaire from '@/components/GeneralHealthQuestionnaire.vue'
 
 // Track the currently open module
 const active = ref(null)

@@ -36,10 +36,10 @@
 
 <script setup>
     import { ref } from 'vue'
-    import AngerQuestionnaire from '@/components/AngerQuestionnaire.vue' // Adjust path if needed
-    import PsychologicalDisorder from '../components/PsychologicalDisorder.vue';
-    import FinancialManagement from '../components/FinancialManagement.vue';
-    import MentalStatus from '../components/MentalStatus.vue';
+    import AngerQuestionnaire from '@/components/AngerQuestionnaire.vue'
+    import PsychologicalDisorder from '@/components/PsychologicalDisorder.vue';
+    import FinancialManagement from '@/components/FinancialManagement.vue';
+    import MentalStatus from '@/components/MentalStatus.vue';
     const activeComponent = ref(null);
 
 </script>

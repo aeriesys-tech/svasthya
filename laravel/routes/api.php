@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,9 @@ Route::post('/forgot-password/resend-otp', [AuthController::class, 'resendPasswo
 Route::post('/forgot-password/verify-otp', [AuthController::class, 'verifyPasswordResetOtp']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
+// Admin public routes
+Route::post('/admin/login', [AdminController::class, 'login']);
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
@@ -25,4 +29,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile', [AuthController::class, 'updateProfile']);
     Route::post('/mood', [AuthController::class, 'saveMood']);
     Route::post('/reflection', [AuthController::class, 'saveReflection']);
+});
+
+// Admin protected routes
+Route::middleware('admin.auth')->prefix('admin')->group(function () {
+    Route::post('/logout', [AdminController::class, 'logout']);
+    Route::get('/moods', [AdminController::class, 'getMoods']);
+    Route::get('/reflections', [AdminController::class, 'getReflections']);
+    Route::get('/users', [AdminController::class, 'getUsers']);
+    Route::get('/dashboard-stats', [AdminController::class, 'getDashboardStats']);
 });
