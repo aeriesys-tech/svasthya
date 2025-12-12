@@ -6,6 +6,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
 // views
 import LoginView from '@/views/LoginView.vue'
 import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
+import ResetPasswordView from '@/views/ResetPasswordView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import CalendarView from '@/views/CalendarView.vue'
@@ -111,6 +112,15 @@ const router = createRouter({
 			path: '/forgot-password',
 			name: 'ForgotPasswordView',
 			component: ForgotPasswordView,
+			meta: {
+				layout: BlankLayout,
+				auth: false
+			},
+		},
+		{
+			path: '/reset-password',
+			name: 'ResetPasswordView',
+			component: ResetPasswordView,
 			meta: {
 				layout: BlankLayout,
 				auth: false
@@ -793,6 +803,12 @@ router.beforeEach((to, from, next) => {
 	// If user is authenticated and trying to access login/register, redirect to dashboard
 	if (isAuthenticated && (to.name === 'LoginView' || to.path === '/login' || to.path === '/register')) {
 		next({ name: 'DashboardView' });
+		return;
+	}
+
+	// Allow access to forgot-password and reset-password routes (public)
+	if (to.name === 'ForgotPasswordView' || to.name === 'ResetPasswordView') {
+		next();
 		return;
 	}
 

@@ -14,13 +14,15 @@ class OtpMail extends Mailable
     use Queueable, SerializesModels;
 
     public $otp;
+    public $type;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($otp)
+    public function __construct($otp, $type = 'registration')
     {
         $this->otp = $otp;
+        $this->type = $type;
     }
 
     /**
@@ -28,8 +30,12 @@ class OtpMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = $this->type === 'password_reset'
+            ? 'Password Reset OTP - Svasthya'
+            : 'Registration OTP - Svasthya';
+
         return new Envelope(
-            subject: 'Registration OTP - Svasthya',
+            subject: $subject,
         );
     }
 
@@ -41,6 +47,10 @@ class OtpMail extends Mailable
         return new Content(
             html: 'emails.otp',
             text: 'emails.otp-text',
+            with: [
+                'otp' => $this->otp,
+                'type' => $this->type,
+            ],
         );
     }
 

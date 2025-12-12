@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration OTP</title>
+    <title>{{ $type === 'password_reset' ? 'Password Reset' : 'Registration' }} OTP</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #2c3e50;">Registration OTP - Svasthya</h2>
+        <h2 style="color: #2c3e50;">{{ $type === 'password_reset' ? 'Password Reset' : 'Registration' }} OTP - Svasthya</h2>
         <p>Hello,</p>
-        <p>Thank you for registering with Svasthya. Please use the following OTP to complete your registration:</p>
+        <p>{{ $type === 'password_reset' ? 'You have requested to reset your password. Please use the following OTP to reset your password:' : 'Thank you for registering with Svasthya. Please use the following OTP to complete your registration:' }}</p>
         <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0; border-radius: 5px;">
             <h1 style="color: #2c3e50; margin: 0; font-size: 32px; letter-spacing: 5px;">{{ $otp }}</h1>
         </div>

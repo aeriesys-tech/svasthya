@@ -50,6 +50,11 @@
 								<span class="visually-hidden">Loading...</span>
 							</div>
 						</button>
+						<div class="text-center mt-3 mb-2">
+							<router-link to="/forgot-password" class="text-decoration-none">
+								Forgot Password?
+							</router-link>
+						</div>
 						<div class="text-center mt-3">
 							<router-link to="/register" class="text-decoration-none">
 								Don't have an account? <span class="fw-bold text-secondary">Register</span>
